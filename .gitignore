@@ -1,0 +1,10 @@
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# env
+.env
+
+# mongo data
+mongo/data/

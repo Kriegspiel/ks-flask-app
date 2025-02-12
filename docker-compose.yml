@@ -1,0 +1,67 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $MONGO_ROOT_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: $MONGO_ROOT_PASSWORD
+    env_file:
+      - ./.env
+    volumes:
+      - ./mongo/data:/data/db      
+      - ./mongo/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
+    networks:
+      - all-apps-network
+    ports:
+      - "27017:27017"
+
+  backend:
+    build: ./app
+    container_name: ks-app
+    environment:
+      MONGO_USERNAME: $MONGO_BACKEND_USERNAME
+      MONGO_PASSWORD: $MONGO_BACKEND_PASSWORD
+      SECRET_KEY: $FLASK_SECRET_KEY
+    volumes:
+      - ./app:/app
+    networks:
+      - all-apps-network
+    depends_on:
+      - mongo
+    ports:
+      - "5000:5000"
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: "mongodb://$MONGO_ROOT_USERNAME:$MONGO_ROOT_PASSWORD@mongo:27017/"
+
+      ME_CONFIG_BASICAUTH: true
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
+      ME_CONFIG_BASICAUTH_USERNAME: $ME_WEB_USERNAME
+      ME_CONFIG_BASICAUTH_PASSWORD: $ME_WEB_PASSWORD
+    env_file:
+      - ./.env      
+    networks:
+      - all-apps-network
+    depends_on:
+      - mongo
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    networks:
+      - all-apps-network
+
+networks:
+  all-apps-network:
+    driver: bridge

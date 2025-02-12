@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Kreigshpile{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col-md-12">
+            <div class="card-group">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="text-muted">Player 2</span>
+                        <span class="game-over"></span>
+                        <span style="float: right;">Time</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="board" style="width: 100%;"></div>
+                        <div class="card-footer">
+                            <span class="text-muted">{{ username }} </span>
+                            <span class="game-over"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                    <span>Moves</span>
+                    </div>
+                    <div class="card-body" id="game-moves">
+                    <table
+                        class="table table-striped table-sm table-dark table-hover"
+                    >
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col" class="active">White</th>
+                            <th scope="col">Black</th>
+                        </tr>
+                        </thead>
+                        <tbody id="pgn-moves">
+                        <!-- PGN Table data -->
+                        </tbody>
+                    </table>
+                    <div class="card-footer">
+                        <span class="text-muted">Analysis</span>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    
+    <!-- Подключаемся к chessboard.js (https://github.com/omega-coder/flask-chess-platform/tree/master) -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/chessboard-0.3.0.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}"></script>
+
+    <!-- Подключение JavaScript для шахмат -->
+    <!-- <script src="{{ url_for('static', filename='js/chess.js') }}"></script> -->
+
+    <script src="{{ url_for('static', filename='js/app.js')}}"></script>
+    
+{% endblock %}

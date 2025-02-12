@@ -1,0 +1,6 @@
+Flask
+flask_pymongo
+bcrypt
+flask_wtf
+chess
+# kriegspiel
