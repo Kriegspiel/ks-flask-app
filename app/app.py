@@ -43,7 +43,7 @@ def home():
 @app.errorhandler(500)
 def internal_error(error):
     import datetime
-    errors_logs.insert_one({'time': datetime.datetime.now().strftime("%y.%b.%d %I:%M"),
+    errors_logs.insert_one({'time': datetime.datetime.now().strftime("%Y.%m.%d %H:%M"),
                             'from':"home",
                             'user': session['username'],
                             'game': session['game_id'],

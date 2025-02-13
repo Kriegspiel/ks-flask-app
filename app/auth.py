@@ -57,5 +57,5 @@ def logout():
 
 def _log(msg):
     import datetime
-    auth_logs.insert_one({'time': datetime.datetime.now().strftime("%y.%b.%d %I:%M"),
+    auth_logs.insert_one({'time': datetime.datetime.now().strftime("%Y.%m.%d %H:%M"),
                           'msg': str(msg)})
