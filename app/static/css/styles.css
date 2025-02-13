@@ -12,7 +12,7 @@ body {
 
 .container {
     max-width: 400px;
-    margin: 50px auto;
+    margin: auto;
     padding: 20px;
     background-color: white;
     border-radius: 8px;
@@ -119,4 +119,11 @@ img[class^="piece"] {
     /* height: 100%; */
     max-width: 748px;
     float: center;
+}
+
+.home-icon {
+    width:32px;
+    height:32px;
+    margin: 12px;
+    clip-path: circle();
 }
