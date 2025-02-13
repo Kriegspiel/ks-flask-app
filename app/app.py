@@ -44,7 +44,6 @@ def home():
 def internal_error(error):
     import datetime
     errors_logs.insert_one({'time': datetime.datetime.now().strftime("%Y.%m.%d %H:%M"),
-                            'from':"home",
                             'user': session['username'],
                             'game': session['game_id'],
                             'error': str(error)})

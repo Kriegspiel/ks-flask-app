@@ -2,6 +2,7 @@ from forms import RegistrationForm, LoginForm
 from flask import render_template, redirect, url_for, session, flash
 import bcrypt
 from flask import Blueprint
+import datetime
 
 from database import mongo
 users = mongo.db.users
@@ -56,6 +57,5 @@ def logout():
     return redirect(url_for('auth_bp.login'))
 
 def _log(msg):
-    import datetime
     auth_logs.insert_one({'time': datetime.datetime.now().strftime("%Y.%m.%d %H:%M"),
                           'msg': str(msg)})
