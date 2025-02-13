@@ -1,13 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Login{% endblock %}
-
 {% block content %}
     <h1 class="text-center mb-4">Login</h1>
     <form method="POST" action="">
-        {{ form.hidden_tag() }} <!-- CSRF-токен для защиты формы -->
+        {{ form.hidden_tag() }} <!-- CSRF-token for for -->
         
-        <!-- Поле для имени пользователя -->
+        <!-- Login text -->
         <div class="form-group">
             {{ form.username.label(class="form-label") }}
             {{ form.username(class="form-control") }}
@@ -20,7 +18,7 @@
             {% endif %}
         </div>
 
-        <!-- Поле для пароля -->
+        <!-- Password text -->
         <div class="form-group">
             {{ form.password.label(class="form-label") }}
             {{ form.password(class="form-control") }}
@@ -33,14 +31,14 @@
             {% endif %}
         </div>
 
-        <!-- Кнопка отправки формы -->
+        <!-- Submit form -->
         <div class="form-group">
             {{ form.submit(class="btn btn-primary") }}
         </div>
     </form>
 
-    <!-- Ссылка на страницу регистрации -->
+    <!-- Link to registration -->
     <div class="text-center mt-3">
-        <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+        <p>Don't have an account? <a href="{{ url_for('auth_bp.register') }}">Register here</a></p>
     </div>
 {% endblock %}

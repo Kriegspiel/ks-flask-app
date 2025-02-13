@@ -1,6 +1,4 @@
-{% extends "base.html" %}
-
-{% block title %}Kreigshpile{% endblock %}
+{% extends "base_logged_in.html" %}
 
 {% block content %}
 
@@ -10,21 +8,21 @@
             <div class="card-group">
                 <div class="card">
                     <div class="card-header">
-                        <span class="text-muted">Player 2</span>
+                        <span class="text-muted">Black: {{ b_username }}</span>
                         <span class="game-over"></span>
-                        <span style="float: right;">Time</span>
+                        <span style="float: right;">Hello, {{ username }}</span>
                     </div>
                     <div class="card-body">
                         <div id="board" style="width: 100%;"></div>
                         <div class="card-footer">
-                            <span class="text-muted">{{ username }} </span>
+                            <span class="text-muted">White: {{ w_username }}</span>
                             <span class="game-over"></span>
                         </div>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-header">
-                    <span>Moves</span>
+                    <span>Current move: {{ current_turn }}</span>
                     </div>
                     <div class="card-body" id="game-moves">
                     <table
@@ -50,6 +48,17 @@
         </div>
         </div>
     </div>
+
+    <div class="form-group">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    
     
     <!-- Подключаемся к chessboard.js (https://github.com/omega-coder/flask-chess-platform/tree/master) -->
     <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>

@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% block title %}Register{% endblock %}
-
 {% block content %}
     <h1 class="text-center mb-4">Register</h1>
     <form method="POST" action="">
@@ -54,6 +52,6 @@
 
     <!-- Ссылка на страницу входа (если есть) -->
     <div class="text-center mt-3">
-        <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        <p>Already have an account? <a href="{{ url_for('auth_bp.login') }}">Login here</a></p>
     </div>
 {% endblock %}

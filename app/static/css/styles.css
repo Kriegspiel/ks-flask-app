@@ -5,9 +5,9 @@ body {
     background-image: url('../img/background.jpg');
     background-size: cover; /* Растягиваем изображение на весь экран */
     background-position: center; /* Центрируем изображение */
-    background-repeat: no-repeat; /* Запрещаем повторение */
+    /*background-repeat: no-repeat;  Запрещаем повторение */
     background-attachment: fixed; /* Фиксируем фон при прокрутке */
-    min-height: 100vh; /* Минимальная высота — весь экран */
+    /*min-height: 100vh; /* Минимальная высота — весь экран */
 }
 
 .container {
@@ -102,4 +102,15 @@ img[class^="piece"] {
 
 .btn-danger:hover {
     background-color: #c82333;
+}
+
+.logout {
+    width:48px;
+    height:48px;
+    opacity: 0.5;
+    margin: 12px;
+}
+
+.error {
+    color: red;
 }

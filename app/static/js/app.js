@@ -6,12 +6,13 @@ var board_cfg = {
   onDrop: onDrop
 };
 var board = ChessBoard('board', board_cfg);
-var turn_color = 'white';
+var current_turn = 'w';
 var game_id = -1;
 
 setInterval(function() {
   $.get('game/update_data', function(data) {
       board.position(data.fen);
+      current_turn = data.current_turn;
   });
 }, 3000); // 3 seconds
 
@@ -27,14 +28,14 @@ function onDrop(source, target, piece, orientation) {
   $.get('/game/move', params, function(data) {
     console.log("Move response: " + data.message);
     board.position(data.fen);
-    turn_color = data.turn_color; 
+    current_turn = data.current_turn; 
   });
 }
 
 function onDragStart(source, piece, position, orientation) {
   if (
-    (turn_color === 'white' && piece.search(/^w/) === -1) ||
-    (turn_color === 'black' && piece.search(/^b/) === -1)
+    (current_turn === 'w' && piece.search(/^w/) === -1) ||
+    (current_turn === 'b' && piece.search(/^b/) === -1)
   ) {
     return false;
   }
