@@ -8,6 +8,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: $MONGO_ROOT_PASSWORD
     env_file:
       - ./.env
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
     volumes:
       - ./mongo/data:/data/db      
       - ./mongo/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
