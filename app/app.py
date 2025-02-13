@@ -23,7 +23,7 @@ app.register_blueprint(auth_bp)
 
 from prepare_game import prepare_game_bp
 app.register_blueprint(prepare_game_bp)
-
+prepare_game_bp.logger = app.logger
 
 from game import game_bp
 app.register_blueprint(game_bp)

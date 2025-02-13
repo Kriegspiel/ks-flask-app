@@ -1,6 +1,6 @@
 import os
 from forms import PrepareGameForm
-from flask import render_template, redirect, request, url_for, session, flash
+from flask import render_template, redirect, request, url_for, session, jsonify, flash
 from flask import Blueprint
 import random
 
@@ -50,10 +50,12 @@ def create():
         'b_fen': 'rnbqkbnr/pppppppp/8/8/8/8/8/8 w KQkq - 0 1',
         'current_turn': 'w',
         'last_move_if_capture': None,
+        'captured_figure': None,
         'is_check': False,
         'winner_user': None,
         'is_finished': False
     })
+    session['game_id'] = game_id
     # log.info('Game was created')
     return redirect(url_for('prepare_game_bp.wait', game_id=game_id))
 
@@ -74,24 +76,21 @@ def connect():
     flash('Game not found', 'danger')
     return redirect(url_for('prepare_game_bp.prepare_game', game_id=game_id, errors='Game not found'))
 
-@prepare_game_bp.route('/wait')
+@prepare_game_bp.route('/wait', methods=['GET', 'POST'])
 def wait():
-    # log.error(f'Wait opponent')
-
-    game_id = request.args.get('game_id')
-    # log.error(f'Wait opponent for game id: {game_id}')
-    if not game_id:
-        redirect(url_for('prepare_game_bp.prepare_game'))
+    if 'username' not in session: return redirect(url_for('home')) 
+    if 'game_id' not in session: return redirect(url_for('prepare_game_bp.create_game'))
     
+    game_id = session["game_id"]
     game = games.find_one({'game_id': game_id})
-    # log.error(f'Game: {game}')
     if not game:
-        # log.error(f'Game for game id: {game_id} was not found')
-        flash('Game not found', 'danger')
+        prepare_game_bp.logger.error(f"Waiting opponent: Game {game_id} not found for user {session['username']}")
         return redirect(url_for('prepare_game_bp.prepare_game'))
     if game['b_username']:
-        session['game_id'] = game_id
-        return redirect(url_for('game_bp.game_', game_id=game_id))
+        prepare_game_bp.logger.info(f"Opponent found: starting game {game_id} {game['w_username']} vs {game['b_username']}")
+        # return redirect(url_for('game_bp.game_', game_id=game_id))
+        return jsonify(update=True, game_id=game_id)
+    
     return render_template('wait_opponent.html', game_id=game_id)
 
 def __generate_new_game_id():

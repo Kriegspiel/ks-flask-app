@@ -28,8 +28,8 @@
                         </div>
                         <div class="card-body" id="game-moves">
                             <div class="form-group">
-                                {% with messages = get_flashed_messages() %}
-                                    {% if messages %}
+                                {% with history = get_flashed_messages() %}
+                                    {% if history %}
                                         {% for message in messages %}
                                             {{ message }}
                                         {% endfor %}

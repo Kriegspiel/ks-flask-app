@@ -14,6 +14,8 @@ game_bp = Blueprint('game_bp', __name__, template_folder='templates')
 def game_():
     if 'username' not in session: return redirect(url_for('home'))    
     if 'game_id' not in session : return redirect(url_for('prepare_game_bp.create_game'))
+    
+    game_bp.logger.error(f"Game init {session['game_id']}")
     game = games.find_one({'game_id': session['game_id']})
     if not game:
         game_bp.logger.error(f"Game {session['game_id']} was not found. Deleted?") 
@@ -55,9 +57,12 @@ def game_move():
         game_bp.logger.error(f"FEN: {game['fen']}")
         return __json_for_user(session['username'], game, move_status="move was rejected")
 
-    game['last_move_is_capture'] = None
+    game['last_move_if_capture'] = None
+    game['captured_figure'] = None
     if board.is_capture(move):
         game['last_move_if_capture'] = request.args.get('target')
+        square = chess.parse_square(request.args.get('target'))
+        game['captured_figure'] = chess.piece_name(board.piece_type_at(square))
 
     # Update board
     board.push(move)
@@ -91,6 +96,7 @@ def game_move():
             'b_fen': game['b_fen'],
             'current_turn': game['current_turn'],
             'last_move_if_capture': game['last_move_if_capture'],
+            'captured_figure': game['captured_figure'],
             'is_check': game["is_check"],
             'winner_user': game["winner_user"],
             'is_finished': game["is_finished"]
@@ -120,8 +126,10 @@ def __json_for_user(username, game, move_status=""):
 def __get_turn_status(username, game):
     if not game["is_finished"]:
         current_turn_user = game["w_username"] if game["current_turn"] == "w" else game["b_username"]
-        check_msg = "Check" if game["is_check"] else ""
-        capture = "" if not game["last_move_if_capture"] else f"Figure in {game['last_move_if_capture']} was captured"
+        check_msg = "Check." if game["is_check"] else ""
+        capture = ""
+        if game["last_move_if_capture"]:
+            capture = f"{game['captured_figure']} in {game['last_move_if_capture']} was captured."
         if username == current_turn_user:
             return f"It's your turn. {check_msg} {capture}"
         else:

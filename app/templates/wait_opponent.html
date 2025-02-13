@@ -7,10 +7,15 @@
         <p>New game was created with id: {{ game_id }}</p>
     </div>
 
+    <script src="{{ url_for('static', filename='js/jquery.min.js')}}"></script>
     <script>
-        function autoRefresh() {
-            window.location = window.location.href;
-        }
-        setInterval('autoRefresh()', 2000);
+        setInterval(function() {
+            $.post('/wait', function(data) { 
+                // console.log(data)
+                if (data.update) {
+                     window.location.href = "/game?game_id=" + data.game_id;
+                }
+            })
+        }, 1000); // 1 seconds
     </script>
 {% endblock %}
