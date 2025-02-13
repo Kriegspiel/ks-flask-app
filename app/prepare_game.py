@@ -49,6 +49,7 @@ def create():
         'w_fen': '8/8/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
         'b_fen': 'rnbqkbnr/pppppppp/8/8/8/8/8/8 w KQkq - 0 1',
         'current_turn': 'w',
+        'last_move_if_capture': None,
         'is_check': False,
         'winner_user': None,
         'is_finished': False

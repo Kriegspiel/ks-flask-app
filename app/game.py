@@ -47,13 +47,18 @@ def game_move():
         return redirect(url_for('home'))
 
     board = chess.Board(game['fen'])
+
     # Check move
     move = chess.Move.from_uci(f"{request.args.get('source')}{request.args.get('target')}")
     if not move in board.legal_moves:
         game_bp.logger.error(f"Incorrect move: {request.args.get('source')} - {request.args.get('target')}")
         game_bp.logger.error(f"FEN: {game['fen']}")
         return __json_for_user(session['username'], game, move_status="move was rejected")
-    
+
+    game['last_move_is_capture'] = None
+    if board.is_capture(move):
+        game['last_move_if_capture'] = request.args.get('target')
+
     # Update board
     board.push(move)
     game['fen'] = board.fen()
@@ -85,6 +90,7 @@ def game_move():
             'w_fen': game['w_fen'],
             'b_fen': game['b_fen'],
             'current_turn': game['current_turn'],
+            'last_move_if_capture': game['last_move_if_capture'],
             'is_check': game["is_check"],
             'winner_user': game["winner_user"],
             'is_finished': game["is_finished"]
@@ -115,10 +121,11 @@ def __get_turn_status(username, game):
     if not game["is_finished"]:
         current_turn_user = game["w_username"] if game["current_turn"] == "w" else game["b_username"]
         check_msg = "Check" if game["is_check"] else ""
+        capture = "" if not game["last_move_if_capture"] else f"Figure in {game['last_move_if_capture']} was captured"
         if username == current_turn_user:
-            return f"It's your turn. {check_msg}"
+            return f"It's your turn. {check_msg} {capture}"
         else:
-            return f"Waiting for opponents turn. {check_msg}"
+            return f"Waiting for opponents turn. {check_msg} {capture}"
     else:
         return f"It's checkmate! {game['winner_user']} is the winner!"
     
