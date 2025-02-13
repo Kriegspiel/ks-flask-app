@@ -1,5 +1,4 @@
 var board_cfg = {
-  position: '{{ fen }}',
   showNotation: true,
   draggable: true,
   onDragStart: onDragStart,
@@ -9,12 +8,17 @@ var board = ChessBoard('board', board_cfg);
 var current_turn = 'w';
 var game_id = -1;
 
+function update(data) {
+  board.position(data["fen"]);
+  current_turn = data["current_turn"];
+  document.getElementById("status").innerHTML = data["current_turn_status"];
+}
+
+$.get('game/update_data', function(data) { update(data); });
 setInterval(function() {
-  $.get('game/update_data', function(data) {
-      board.position(data.fen);
-      current_turn = data.current_turn;
-  });
+  $.get('game/update_data', function(data) { update(data); })
 }, 3000); // 3 seconds
+
 
 function onDrop(source, target, piece, orientation) {
   console.log("Try move: " + piece + " from " + source + " to " + target);
@@ -26,9 +30,8 @@ function onDrop(source, target, piece, orientation) {
   };
 
   $.get('/game/move', params, function(data) {
-    console.log("Move response: " + data.message);
-    board.position(data.fen);
-    current_turn = data.current_turn; 
+    console.log("Move response: " + JSON.stringify(data));
+    update(data);
   });
 }
 
@@ -41,31 +44,31 @@ function onDragStart(source, piece, position, orientation) {
   }
 }
 
-$('#reset').click(function() {
-  $.get('/reset', function(data) {
-    board.position(data.fen);
-    document.querySelector('#pgn').innerText = data.pgn;
-  });
-});
+// $('#reset').click(function() {
+//   $.get('/reset', function(data) {
+//     board.position(data.fen);
+//     document.querySelector('#pgn').innerText = data.pgn;
+//   });
+// });
 
-$('#undo').click(function() {
-  if (!$(this).hasClass('text-muted')) {
-    $.get('/undo', function(data) {
-      board.position(data.fen);
-      document.querySelector('#pgn').innerText = data.pgn;
-    });
-  } else {
-    //
-  }
-});
+// $('#undo').click(function() {
+//   if (!$(this).hasClass('text-muted')) {
+//     $.get('/undo', function(data) {
+//       board.position(data.fen);
+//       document.querySelector('#pgn').innerText = data.pgn;
+//     });
+//   } else {
+//     //
+//   }
+// });
 
-$('#redo').click(function() {
-  if (!$(this).hasClass('text-muted')) {
-    $.get('/redo', function(data) {
-      board.position(data.fen);
-      document.querySelector('#pgn').innerText = data.pgn;
-    });
-  } else {
-    //
-  }
-});
+// $('#redo').click(function() {
+//   if (!$(this).hasClass('text-muted')) {
+//     $.get('/redo', function(data) {
+//       board.position(data.fen);
+//       document.querySelector('#pgn').innerText = data.pgn;
+//     });
+//   } else {
+//     //
+//   }
+// });

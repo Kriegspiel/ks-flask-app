@@ -1,0 +1,29 @@
+{% extends "base_logged_in.html" %}
+
+{% block content %}
+    <h1 class="text-center mb-4">Create game</h1>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }} <!-- CSRF-token for form protection -->
+        <div class="text-center mt-3">
+            <p>Create new game or connect to the existing one</p>
+        </div>
+
+        <!-- Connect to existing game -->
+        <div class="form-group mx-auto">
+            {{ form.game_id.label(class="form-label") }}
+            {{ form.game_id(class="form-control") }}
+            {% if form.game_id.errors %}
+                <div class="error">
+                    {% for error in form.game_id.errors %}
+                        <span>{{ error }}</span><br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-group mx-auto"></div>
+            {{ form.connect(class="btn btn-primary") }}
+            {{ form.create(class="btn btn-primary") }}
+        </div>
+    </form>
+
+{% endblock %}

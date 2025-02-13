@@ -1,0 +1,16 @@
+{% extends "base_logged_in.html" %}
+
+{% block content %}
+    <h1 class="text-center mb-4">Waiting opponent</h1>
+
+    <div class="text-center mt-3">
+        <p>New game was created with id: {{ game_id }}</p>
+    </div>
+
+    <script>
+        function autoRefresh() {
+            window.location = window.location.href;
+        }
+        setInterval('autoRefresh()', 2000);
+    </script>
+{% endblock %}

@@ -114,3 +114,9 @@ img[class^="piece"] {
 .error {
     color: red;
 }
+
+.card-body {
+    /* height: 100%; */
+    max-width: 748px;
+    float: center;
+}
