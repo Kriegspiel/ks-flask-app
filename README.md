@@ -13,7 +13,7 @@ Copy *.env.example* to *.env* and write new passwords inside
 ### Build and Start the Containers
 Use Docker Compose to build and start the containers:
 ```bash
-docker-compose up --build
+docker-compose up --build -d
 ```
 To stop and remove the containers, use:
 ```bash

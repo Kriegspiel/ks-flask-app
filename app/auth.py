@@ -5,6 +5,7 @@ from flask import Blueprint
 
 from database import mongo
 users = mongo.db.users
+auth_logs = mongo.db.auth_logs
 
 auth_bp = Blueprint('auth_bp', __name__, template_folder='templates')
 
@@ -17,11 +18,14 @@ def login():
 
         user = users.find_one({'username': username})
         if not user:
+            _log(f"Try to login not existing user '{username}'")
             form.username.errors = ["User doesn't exists!"]
         elif not bcrypt.checkpw(password.encode('utf-8'), user['password']):
+            _log(f"Try to login '{username}' with incorrect password")
             form.password.errors = ["Incorrect password!"]
         else:
             session['username'] = username
+            _log(f"Log in was successful for '{username}'")
             return redirect(url_for('home'))
 
     return render_template('login.html', form=form)
@@ -33,6 +37,7 @@ def register():
         username = form.username.data
         existing_user = users.find_one({'username': username})
         if existing_user:
+            _log(f"Try to register existing user '{username}'")
             form.username.errors = ["The user already exists!"]
             return render_template('register.html', form=form)
         
@@ -40,19 +45,17 @@ def register():
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         
         users.insert_one({'username': username, 'password': hashed_password})
-        flash('Registration was successful!')
-
+        _log(f"Registration was successful. New user '{username}'")
         return redirect(url_for('auth_bp.login'))
     return render_template('register.html', form=form)
 
 @auth_bp.route('/logout')
 def logout():
+    _log(f"Logout user {session['username']}")
     session.pop('username', None)
     return redirect(url_for('auth_bp.login'))
 
-# def auth_required(func):
-#     def wrapper(func):
-#         if not 'username' in session:
-#             return redirect(url_for('auth_bp.login'))
-#         func()
-#     return wrapper
+def _log(msg):
+    import datetime
+    auth_logs.insert_one({'time': datetime.datetime.now().strftime("%y.%b.%d %I:%M"),
+                          'msg': str(msg)})

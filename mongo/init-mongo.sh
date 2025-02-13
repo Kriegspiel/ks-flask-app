@@ -15,4 +15,6 @@ mongosh -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" admin 
     });
     db.createCollection('users');
     db.createCollection('games');
+    db.createCollection('auth_logs');
+    db.createCollection('errors_logs');
 EOF
