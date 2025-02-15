@@ -3,7 +3,7 @@ name: Build and Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Запускать workflow только при пуше в ветку main
+      - master  # Запускать workflow только при пуше в ветку main
 
 jobs:
   build-and-deploy:
